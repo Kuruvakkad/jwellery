@@ -400,6 +400,7 @@
     </div>
     <div class="foot-bottom">
       <span>© 2026 [Your Brand Name]. All pieces are imitation/fashion jewellery.</span>
+      <span id="visit-count-line"></span>
       <span>Small batches, chosen with care</span>
     </div>
   </div>
@@ -409,7 +410,8 @@
   // ====== EDIT THESE TWO LINES ======
   const CONFIG = {
     WHATSAPP_NUMBER: "91XXXXXXXXXX", // e.g. "919876543210" — no + or spaces
-    SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSmRhM0jiuQmb237rd_zUkeP8xYyE5f0RwqlfeUOiLNeTgtPMs0nwIXqymbbwEnJC9GDl52BqtTkxeb/pub?output=csv" // from Google Sheet: File > Share > Publish to web > CSV
+    SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSmRhM0jiuQmb237rd_zUkeP8xYyE5f0RwqlfeUOiLNeTgtPMs0nwIXqymbbwEnJC9GDl52BqtTkxeb/pub?output=csv", // from Google Sheet: File > Share > Publish to web > CSV
+    VISIT_COUNTER_URL: "https://script.google.com/macros/s/AKfycbwHID7i_7iSDeIVr74J9AAhI1-5JG6w7gK6ENA-iCzWu6yJIs6v8A9Nq8okr-yjETrxKQ/exec" // ends in /exec, from Deploy > New deployment > Web app
   };
   // ===================================
 
@@ -574,7 +576,31 @@
       });
   }
 
+  function loadVisitCount(){
+    const el = document.getElementById("visit-count-line");
+    if (!el) return;
+    if (!CONFIG.VISIT_COUNTER_URL || CONFIG.VISIT_COUNTER_URL.indexOf("PASTE_YOUR") === 0){
+      return; // not configured yet — stay silent, no broken UI
+    }
+    const callbackName = "__visitCountCb_" + Date.now();
+    window[callbackName] = function(data){
+      if (data && typeof data.count !== "undefined"){
+        el.textContent = data.count.toLocaleString("en-IN") + " visits";
+      }
+      delete window[callbackName];
+      script.remove();
+    };
+    const script = document.createElement("script");
+    script.src = CONFIG.VISIT_COUNTER_URL + "?callback=" + callbackName;
+    script.onerror = function(){
+      delete window[callbackName];
+      script.remove();
+    };
+    document.body.appendChild(script);
+  }
+
   loadProducts();
+  loadVisitCount();
 </script>
 </body>
 </html>
