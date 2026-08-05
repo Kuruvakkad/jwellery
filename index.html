@@ -265,6 +265,66 @@
   .step h3{ font-size:18px; margin-top:14px; color:var(--ivory); }
   .step p{ margin-top:8px; font-size:14px; color:var(--ivory-dim); }
 
+  /* ---------- Reviews ---------- */
+  #reviews{ background:var(--bg-alt); }
+  .review-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:2px; background:var(--line);
+  }
+  .review-grid:empty{ display:none; }
+  .review-empty{ text-align:center; color:var(--ivory-dim); font-size:14px; padding:20px 0 0; }
+  @media (max-width:900px){ .review-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:600px){ .review-grid{ grid-template-columns:1fr; } }
+  .review-card{
+    background:var(--bg-alt); padding:30px 28px; display:flex; flex-direction:column;
+  }
+  .review-stars{ color:var(--gold); font-size:14px; letter-spacing:2px; margin-bottom:14px; }
+  .review-quote{
+    font-size:15px; color:var(--ivory); line-height:1.65; flex:1;
+    font-family:'Marcellus', serif;
+  }
+  .review-quote::before{ content:'\201C'; color:var(--gold-deep); }
+  .review-quote::after{ content:'\201D'; color:var(--gold-deep); }
+  .review-meta{
+    margin-top:18px; padding-top:14px; border-top:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .review-author{ font-size:13px; color:var(--ivory); font-weight:500; }
+  .review-product{ font-size:11px; color:var(--gold-deep); text-transform:uppercase; letter-spacing:.08em; }
+  .review-badge{
+    font-size:10px; color:var(--ivory-dim); letter-spacing:.1em; text-transform:uppercase;
+    margin-top:6px; display:flex; align-items:center; gap:5px;
+  }
+  .review-badge svg{ width:11px; height:11px; fill:var(--gold-deep); }
+
+  .review-form-wrap{
+    max-width:560px; margin:56px auto 0; padding:36px;
+    background:var(--card); border:1px solid var(--line);
+  }
+  .review-form-wrap h3{ font-size:19px; color:var(--ivory); margin-bottom:6px; }
+  .review-form-wrap .sub{ font-size:13px; color:var(--ivory-dim); margin-bottom:22px; }
+  .review-form{ display:flex; flex-direction:column; gap:14px; }
+  .review-form input[type="text"],
+  .review-form select,
+  .review-form textarea{
+    width:100%; background:var(--bg); border:1px solid var(--line); color:var(--ivory);
+    padding:12px 14px; font-family:'Jost', sans-serif; font-size:14px; font-weight:300;
+    border-radius:2px; outline:none; transition:border-color .2s;
+  }
+  .review-form input::placeholder, .review-form textarea::placeholder{ color:var(--ivory-dim); opacity:.7; }
+  .review-form input:focus, .review-form select:focus, .review-form textarea:focus{ border-color:var(--gold); }
+  .review-form textarea{ min-height:100px; resize:vertical; }
+  .review-form select{ appearance:none; cursor:pointer; }
+  .hp-field{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
+  .review-form button{
+    align-self:flex-start; background:var(--gold); color:var(--ivory);
+    border:none; padding:13px 30px; font-size:13px; letter-spacing:.08em; text-transform:uppercase;
+    cursor:pointer; transition:background .2s;
+  }
+  .review-form button:hover{ background:var(--gold-bright); }
+  .review-form button:disabled{ opacity:.6; cursor:default; }
+  .rf-status{ font-size:13px; color:var(--gold-deep); min-height:18px; }
+  .rf-status.error{ color:#C98A6B; }
+
   /* ---------- CTA band ---------- */
   .cta-band{
     text-align:center; padding:110px 0; position:relative;
@@ -305,6 +365,7 @@
     <nav class="nav-links">
       <a href="#collection">Collection</a>
       <a href="#story">Our Story</a>
+      <a href="#reviews">Reviews</a>
       <a href="#order">How to Order</a>
     </nav>
     <a class="nav-cta js-wa" href="#" target="_blank" rel="noopener">WhatsApp Us</a>
@@ -385,6 +446,40 @@
   </div>
 </section>
 
+<section id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">In Their Words</div>
+      <h2>What customers are saying.</h2>
+      <p>Real messages from real orders — shared with permission.</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="review-grid" id="reviews-grid"></div>
+
+    <div class="review-form-wrap">
+      <h3 class="serif">Share Your Experience</h3>
+      <p class="sub">Bought something from us? We'd love to hear how it went. Reviews are checked before they go live.</p>
+      <form class="review-form" id="review-form">
+        <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
+        <input type="text" id="rf-name" placeholder="Your name" required>
+        <select id="rf-rating" required>
+          <option value="">Rating</option>
+          <option value="5">★★★★★ Excellent</option>
+          <option value="4">★★★★☆ Very good</option>
+          <option value="3">★★★☆☆ Good</option>
+          <option value="2">★★☆☆☆ Fair</option>
+          <option value="1">★☆☆☆☆ Poor</option>
+        </select>
+        <input type="text" id="rf-product" placeholder="Piece you purchased (optional)">
+        <textarea id="rf-review" placeholder="Tell us about your experience..." required></textarea>
+        <button type="submit">Submit Review</button>
+        <p class="rf-status" id="rf-status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
 <section id="order">
   <div class="wrap">
     <div class="section-head">
@@ -456,6 +551,8 @@
     WHATSAPP_NUMBER: "919745313618", // e.g. "919876543210" — no + or spaces
     SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSmRhM0jiuQmb237rd_zUkeP8xYyE5f0RwqlfeUOiLNeTgtPMs0nwIXqymbbwEnJC9GDl52BqtTkxeb/pub?output=csv", // from Google Sheet: File > Share > Publish to web > CSV
     VISIT_COUNTER_URL: "https://script.google.com/macros/s/AKfycbwHID7i_7iSDeIVr74J9AAhI1-5JG6w7gK6ENA-iCzWu6yJIs6v8A9Nq8okr-yjETrxKQ/exec", // ends in /exec, from Deploy > New deployment > Web app
+    REVIEWS_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5Oe-eqwdwg8PN_XoE2Tb3rFUzgkPBOJEJO9YS-mQsXBDYteQERoaS4E7mdpdf7CFMCEXvWq2l-hpj/pub?output=csv", // published CSV link for the Reviews sheet tab (separate from the products sheet)
+    REVIEW_SUBMIT_URL: "https://script.google.com/macros/s/AKfycbwHID7i_7iSDeIVr74J9AAhI1-5JG6w7gK6ENA-iCzWu6yJIs6v8A9Nq8okr-yjETrxKQ/exec", // same Web App URL as VISIT_COUNTER_URL (the doPost handler lives in the same script project)
     // ---- SEASONAL SALE ----
     // Set ACTIVE to true to switch every price on the site to show a discount.
     // Set it back to false (or just let END_DATE pass) to return to normal pricing.
@@ -696,9 +793,105 @@
     }
   }
 
+  function starsHTML(rating){
+    const n = Math.max(0, Math.min(5, Math.round(parseFloat(rating)) || 0));
+    return '★★★★★☆☆☆☆☆'.slice(5 - n, 10 - n);
+  }
+
+  function reviewCardHTML(r){
+    const name = get(r, ["Customer Name","Name"]);
+    const rating = get(r, ["Rating"]);
+    const text = get(r, ["Review","Review Text"]);
+    const product = get(r, ["Piece Purchased","Product","Product Name"]);
+    return (
+      '<div class="review-card">' +
+        (rating ? '<div class="review-stars">' + starsHTML(rating) + '</div>' : '') +
+        '<p class="review-quote">' + escapeHtml(text) + '</p>' +
+        '<div class="review-meta">' +
+          '<div>' +
+            '<div class="review-author">' + escapeHtml(name) + '</div>' +
+            (product ? '<div class="review-product">' + escapeHtml(product) + '</div>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function loadReviews(){
+    const grid = document.getElementById("reviews-grid");
+    if (!grid) return;
+    if (!CONFIG.REVIEWS_CSV_URL || CONFIG.REVIEWS_CSV_URL.indexOf("PASTE_YOUR") === 0){
+      return; // not configured yet — grid stays empty, hidden via :empty CSS
+    }
+    const bustCache = CONFIG.REVIEWS_CSV_URL + (CONFIG.REVIEWS_CSV_URL.indexOf("?") !== -1 ? "&" : "?") + "t=" + Date.now();
+    fetch(bustCache)
+      .then(function(res){ if (!res.ok) throw new Error("fetch failed"); return res.text(); })
+      .then(function(text){
+        const rows = csvToObjects(parseCSV(text)).filter(function(r){
+          return get(r, ["Review","Review Text"]).trim().length > 0 &&
+                 get(r, ["Status"]).trim().toLowerCase() === "approved";
+        });
+        if (!rows.length) return; // nothing approved yet — grid stays empty/hidden
+        grid.innerHTML = rows.reverse().slice(0, 9).map(reviewCardHTML).join("");
+      })
+      .catch(function(){ /* fail silently — reviews are a bonus section, not critical */ });
+  }
+
+  function initReviewForm(){
+    const form = document.getElementById("review-form");
+    if (!form) return;
+    const statusEl = document.getElementById("rf-status");
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      // honeypot — if this hidden field got filled in, it's a bot; drop silently
+      if (form.querySelector('[name="website"]').value){
+        statusEl.textContent = "Thank you! Your review will appear once approved.";
+        form.reset();
+        return;
+      }
+      const name = document.getElementById("rf-name").value.trim();
+      const rating = document.getElementById("rf-rating").value;
+      const product = document.getElementById("rf-product").value.trim();
+      const review = document.getElementById("rf-review").value.trim();
+
+      if (!name || !rating || !review){
+        statusEl.textContent = "Please fill in your name, a rating, and a review.";
+        statusEl.className = "rf-status error";
+        return;
+      }
+      if (!CONFIG.REVIEW_SUBMIT_URL || CONFIG.REVIEW_SUBMIT_URL.indexOf("PASTE_YOUR") === 0){
+        statusEl.textContent = "Review submission isn't connected yet — please message us on WhatsApp instead.";
+        statusEl.className = "rf-status error";
+        return;
+      }
+
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      statusEl.className = "rf-status";
+      statusEl.textContent = "Submitting…";
+
+      fetch(CONFIG.REVIEW_SUBMIT_URL, {
+        method: "POST",
+        mode: "no-cors", // Apps Script doesn't return CORS headers for POST; we don't need to read the response
+        headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids a CORS preflight that Apps Script can't handle
+        body: JSON.stringify({ type: "review", name: name, rating: rating, review: review, product: product })
+      }).then(function(){
+        statusEl.textContent = "Thank you! Your review will appear once approved.";
+        form.reset();
+        btn.disabled = false;
+      }).catch(function(){
+        statusEl.textContent = "Something went wrong — please try again or message us on WhatsApp.";
+        statusEl.className = "rf-status error";
+        btn.disabled = false;
+      });
+    });
+  }
+
   loadProducts();
   loadVisitCount();
   initSalePill();
+  loadReviews();
+  initReviewForm();
 </script>
 </body>
 </html>
