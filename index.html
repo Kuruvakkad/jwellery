@@ -355,6 +355,22 @@
   }
 
   ::selection{ background:var(--gold-deep); color:var(--ivory); }
+
+  /* ---------- Back to top ---------- */
+  .back-to-top{
+    position:fixed; bottom:24px; right:24px; z-index:60;
+    width:44px; height:44px; border-radius:50%; border:none; cursor:pointer;
+    background:var(--gold); color:var(--ivory);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transform:translateY(8px);
+    transition:opacity .3s, transform .3s, background .2s;
+    box-shadow:0 4px 14px rgba(0,0,0,.35);
+  }
+  .back-to-top.visible{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  .back-to-top:hover{ background:var(--gold-bright); }
+  .back-to-top svg{ width:18px; height:18px; }
+  @media (max-width:480px){ .back-to-top{ bottom:16px; right:16px; width:40px; height:40px; } }
+  @media (prefers-reduced-motion: reduce){ .back-to-top{ transition:opacity .01s; } }
 </style>
 </head>
 <body>
@@ -544,6 +560,10 @@
     </div>
   </div>
 </footer>
+
+<button id="back-to-top" class="back-to-top" aria-label="Back to top" type="button">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+</button>
 
 <script>
   // ====== EDIT THESE TWO LINES ======
@@ -890,8 +910,27 @@
   loadProducts();
   loadVisitCount();
   initSalePill();
+  function initBackToTop(){
+    const btn = document.getElementById("back-to-top");
+    const hero = document.querySelector(".hero");
+    if (!btn) return;
+    const threshold = hero ? hero.offsetHeight * 0.6 : window.innerHeight * 0.6;
+
+    function toggleVisibility(){
+      btn.classList.toggle("visible", window.scrollY > threshold);
+    }
+    window.addEventListener("scroll", toggleVisibility, { passive: true });
+    toggleVisibility();
+
+    btn.addEventListener("click", function(){
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+    });
+  }
+
   loadReviews();
   initReviewForm();
+  initBackToTop();
 </script>
 </body>
 </html>
