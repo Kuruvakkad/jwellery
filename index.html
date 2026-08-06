@@ -705,6 +705,7 @@
     const soldOut = status.toLowerCase().indexOf("sold") !== -1;
     const onSale = isSaleLive() && !soldOut;
     const orderText = "Hi! I'm interested in the " + name;
+    const notifyText = "Hi! Please notify me when the " + name + " is back in stock.";
     const codeLine = (code ? escapeHtml(code) + " · " : "") + escapeHtml(category);
 
     return (
@@ -717,7 +718,7 @@
           '<div class="card-foot">' +
             '<div class="card-price">' + priceHTML(price, saleOverride, onSale) + '</div>' +
             (soldOut
-              ? '<span class="wa-link disabled">Sold Out</span>'
+              ? '<a class="wa-link" href="' + waLink(notifyText) + '" target="_blank" rel="noopener">Notify Me →</a>'
               : '<a class="wa-link" href="' + waLink(orderText) + '" target="_blank" rel="noopener">Order on WhatsApp →</a>') +
           '</div>' +
         '</div>' +
